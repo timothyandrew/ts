@@ -3,7 +3,7 @@
 package totalspaces2
 
 /*
-#cgo CFLAGS: -x objective-c -I../../ruby/lib
+#cgo CFLAGS: -x objective-c -I./
 #cgo LDFLAGS: -L ${SRCDIR} -ltotalspaces2api
 #include <TSLib.h>
 */
