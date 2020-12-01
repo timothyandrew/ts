@@ -11,6 +11,7 @@ import (
 type AlfredEntry struct {
 	Title    string `json:"title"`
 	Subtitle string `json:"subtitle"`
+	Arg      string `json:"arg"`
 }
 
 type AlfredItems struct {
@@ -87,6 +88,7 @@ var listCmd = &cli.Command{
 				entries = append(entries, AlfredEntry{
 					Title:    space.Name,
 					Subtitle: fmt.Sprintf("Index: %v", space.Id),
+					Arg:      fmt.Sprint(space.Id),
 				})
 			}
 
@@ -125,6 +127,18 @@ var switchCmd = &cli.Command{
 	},
 }
 
+var nameCmd = &cli.Command{
+	Use:   "name",
+	Short: "Name the current space",
+	Args:  cli.ExactArgs(1),
+	Run: func(cmd *cli.Command, args []string) {
+		// Hardcode to the first display for now
+		display := ts2.DisplayList()[0]
+		space := ts2.CurrentSpaceNumberOnDisplay(display.ID)
+		ts2.SetNameForSpaceOnDisplay(space, args[0], display.ID)
+	},
+}
+
 func init() {
 	spacesCmd.AddCommand(listCmd)
 	listCmd.Flags().BoolVarP(&OnlyNamed, "only-named", "n", false, "Only display named spaces")
@@ -134,4 +148,6 @@ func init() {
 	spacesCmd.AddCommand(switchCmd)
 	switchCmd.Flags().IntVarP(&SwitchToSpaceNumber, "number", "i", -1, "Switch to a space by number (starts at 1; doesn't currently support multiple displays)")
 	switchCmd.Flags().StringVarP(&SwitchToSpaceName, "name", "n", "", "Switch to a space by name")
+
+	spacesCmd.AddCommand(nameCmd)
 }
